@@ -1,0 +1,22 @@
+[package]
+name = "bevy-headless"
+version = "0.1.0"
+edition = "2021"
+description = "Bevy HeadlessPlugins plugins group. Uses ratatui to provide a headless terminal interface."
+license = "None"
+keywords = ["bevy", "headless", "ratatui"]
+categories = ["bevy"]
+repository = "https://github.com/mcskware/bevy-headless"
+publish = false
+
+[dependencies]
+bevy_app = "0.13.2"
+bevy_core = "0.13.2"
+bevy_derive = "0.13.2"
+bevy_ecs = "0.13.2"
+bevy_ecs_macros = "0.13.2"
+bevy_time = "0.13.2"
+bevy_utils = "0.13.2"
+crossterm = "0.27.0"
+ratatui = "0.26.1"
+tracing-subscriber = { version = "0.3.18", features = ["env-filter"] }
