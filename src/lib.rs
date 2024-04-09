@@ -7,7 +7,7 @@ use bevy_time::TimePlugin;
 mod exit;
 mod headless_plugin;
 pub mod log;
-mod terminal;
+pub mod terminal;
 
 /// Plugin Group for a headless server using a ratatui frontend.
 /// Basically the `MinimalPlugins` plus the `HeadlessPlugin`
