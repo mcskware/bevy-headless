@@ -58,3 +58,5 @@ pub fn render(logs: Res<AllLogs>, mut terminal: ResMut<TerminalResource>) {
 ```
 
 In this example, we add the HeadlessPlugins group, and set our schedule runner to tick 60 times per second.
+The render function uses standard ratatui code inside the draw closure.
+Note that we've also used the AllLogs resource in the render method, to retrieve all logged messages in headless mode.
