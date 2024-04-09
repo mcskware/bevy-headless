@@ -1,4 +1,4 @@
-//! All things related to log capture in ratatui mode
+//! Provides the `AllLogs` resource for storing log messages in headless mode.
 
 use std::sync::mpsc;
 

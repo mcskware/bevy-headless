@@ -1,4 +1,22 @@
-//! terminal stuff for headless mode ratatui
+//! Provides a resource for the ratatui [Terminal](https://docs.rs/ratatui/latest/ratatui/terminal/index.html).
+//! You can use this in a system via something like:
+//! ```rust
+//! # use bevy_ecs::system::ResMut;
+//! # use bevy_ecs::prelude::Res;
+//! # use ratatui::Terminal;
+//! # use ratatui::widgets::{Block, Borders, Paragraph, Wrap};
+//! # use bevy_headless::terminal::TerminalResource;
+//! # use bevy_headless::log::AllLogs;
+//! fn render(logs: Res<AllLogs>, mut terminal: ResMut<TerminalResource>) {
+//!     let _ = terminal.as_mut().get_mut().draw(|frame| {
+//!         let block = Block::default().title("Greeting").borders(Borders::ALL);
+//!         let greeting = Paragraph::new("Hello, world!")
+//!             .block(block);
+//!         frame.render_widget(greeting, frame.size());
+//!     });
+//! }
+//! ```
+//! The terminal's `get_mut` method can be used to access the terminal directly.
 
 use std::io::Stdout;
 

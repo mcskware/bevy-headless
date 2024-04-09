@@ -1,4 +1,8 @@
-//! Plugin group for running in headless mode with ratatui
+//! Plugin group for running in headless mode with ratatui.
+//! Use this plugin group instead of [MinimalPlugins](https://docs.rs/bevy/latest/bevy/struct.MinimalPlugins.html) to run in headless mode.
+//! Includes a resource of type `TerminalResource` for ratatui terminal access.
+//! Includes a resource of type `ShouldQuit` for quitting the application.
+//! Includes a resource of type `AllLogs` for retrieving all logged messages.
 
 use bevy_app::{PluginGroup, PluginGroupBuilder, ScheduleRunnerPlugin};
 use bevy_core::{FrameCountPlugin, TaskPoolPlugin, TypeRegistrationPlugin};
