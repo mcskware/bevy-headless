@@ -3,7 +3,7 @@
 use bevy_app::{App, PluginGroup, ScheduleRunnerPlugin, Update};
 use bevy_ecs::system::{Res, ResMut};
 use bevy_headless::{log::AllLogs, terminal::TerminalResource, HeadlessPlugins};
-use bevy_utils::Duration;
+use bevy_utils::{tracing::error, Duration};
 use ratatui::widgets::{Block, Borders, Paragraph, Wrap};
 
 fn main() {
@@ -19,7 +19,7 @@ fn main() {
 
 #[allow(clippy::needless_pass_by_value, clippy::cast_possible_truncation)]
 fn render(logs: Res<AllLogs>, mut terminal: ResMut<TerminalResource>) {
-    let _ = terminal.as_mut().get_mut().draw(|frame| {
+    let res = terminal.as_mut().get_mut().draw(|frame| {
         let block = Block::default().title("Greeting").borders(Borders::ALL);
         let scroll_count: u16 =
             logs.count() as u16 - (block.inner(frame.size()).height).min(logs.count() as u16);
@@ -29,4 +29,7 @@ fn render(logs: Res<AllLogs>, mut terminal: ResMut<TerminalResource>) {
         let greeting = greeting.scroll((scroll_count, 0));
         frame.render_widget(greeting, frame.size());
     });
+    if let Err(err) = res {
+        error!("Failed to render terminal: {err}");
+    }
 }

@@ -19,14 +19,14 @@ impl Plugin for HeadlessPlugin {
     fn build(&self, app: &mut App) {
         setup_logging(app);
 
-        let _ = app.add_systems(Update, poll_terminal_input);
-        let _ = app.insert_resource(ShouldQuit {
+        let _mut_self = app.add_systems(Update, poll_terminal_input);
+        let _mut_self = app.insert_resource(ShouldQuit {
             result: PollResult::Continue,
         });
-        let _ = app.add_systems(Update, exit_system);
+        let _mut_self = app.add_systems(Update, exit_system);
 
         let terminal: Terminal<CrosstermBackend<Stdout>> =
             setup_terminal().expect("Terminal should be able to set up");
-        let _ = app.insert_resource(TerminalResource { terminal });
+        let _mut_self = app.insert_resource(TerminalResource { terminal });
     }
 }

@@ -4,6 +4,7 @@ use bevy_app::AppExit;
 use bevy_ecs::event::EventWriter;
 use bevy_ecs::system::{Res, ResMut};
 use bevy_ecs_macros::Resource;
+use bevy_utils::tracing::error;
 use bevy_utils::Duration;
 use crossterm::event::{self, KeyModifiers};
 use crossterm::event::{Event, KeyCode};
@@ -67,7 +68,9 @@ pub fn exit_system(
     mut terminal: ResMut<TerminalResource>,
 ) {
     if should_quit.result() == PollResult::Quit {
-        let _ = exit.send(AppExit);
-        let _ = restore_terminal(terminal.as_mut().get_mut());
+        let _event = exit.send(AppExit);
+        if let Err(err) = restore_terminal(terminal.as_mut().get_mut()) {
+            error!("Failed to restore terminal: {err}");
+        }
     }
 }

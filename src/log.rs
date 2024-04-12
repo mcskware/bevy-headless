@@ -39,8 +39,8 @@ impl AllLogs {
 
 /// System to transfer log events to a log holder
 pub(crate) fn consume_log_events(mut events: EventReader<LogEvent>, mut logs: ResMut<AllLogs>) {
-    for e in events.read() {
-        logs.add_log(e.message.clone());
+    for event in events.read() {
+        logs.add_log(event.message.clone());
     }
 }
 
@@ -63,7 +63,7 @@ pub(crate) fn transfer_log_events(
     mut log_events: EventWriter<LogEvent>,
 ) {
     // Make sure to use `try_iter()` and not `iter()` to prevent blocking.
-    let _ = log_events.send_batch(receiver.try_iter());
+    let _ids = log_events.send_batch(receiver.try_iter());
 }
 
 /// This is the [`Layer`] that we will use to capture log events and then send them to Bevy's
@@ -95,7 +95,7 @@ impl<S: Subscriber> Layer<S> for CaptureLayer {
 }
 
 /// A [`Visit`](tracing::field::Visit)or that records log messages that are transferred to [`CaptureLayer`].
-struct CaptureLayerVisitor<'a>(&'a mut Option<String>);
+struct CaptureLayerVisitor<'this>(&'this mut Option<String>);
 impl tracing::field::Visit for CaptureLayerVisitor<'_> {
     fn record_debug(&mut self, field: &tracing::field::Field, value: &dyn std::fmt::Debug) {
         // This if statement filters out unneeded events sometimes show up
@@ -114,11 +114,11 @@ pub(crate) fn setup_logging(app: &mut App) {
     let layer = CaptureLayer { sender };
     let resource = CapturedLogEvents(receiver);
 
-    let _ = app.insert_non_send_resource(resource);
-    let _ = app.add_event::<LogEvent>();
-    let _ = app.add_systems(Update, transfer_log_events);
-    let _ = app.add_systems(Update, consume_log_events);
-    let _ = app.insert_resource(AllLogs::default());
+    let _mut_self = app.insert_non_send_resource(resource);
+    let _mut_self = app.add_event::<LogEvent>();
+    let _mut_self = app.add_systems(Update, transfer_log_events);
+    let _mut_self = app.add_systems(Update, consume_log_events);
+    let _mut_self = app.insert_resource(AllLogs::default());
 
     let finished_subscriber;
     let default_filter = { format!("{},{}", Level::TRACE, "wgpu=warn,naga=debug") };
@@ -130,5 +130,7 @@ pub(crate) fn setup_logging(app: &mut App) {
     let subscriber = subscriber.with(layer);
 
     finished_subscriber = Box::new(subscriber);
-    let _ = tracing::subscriber::set_global_default(finished_subscriber);
+    if let Err(err) = tracing::subscriber::set_global_default(finished_subscriber) {
+        eprintln!("Failed to set subscriber: {err}");
+    }
 }
